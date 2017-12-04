@@ -3,13 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "@types/react-native": "^0.48.4",
+    "@types/expo": "^23.0.0",
+    "@types/react-native": "^0.50.7",
     "@types/react-test-renderer": "^16.0.0",
     "jest-expo-ts": "^22.0.1",
     "react-native-scripts-ts": "1.7.0",
     "react-native-typescript-transformer": "^1.1.4",
     "react-test-renderer": "^16.2.0",
     "tslib": "^1.7.1",
+    "tslint": "^5.8.0",
+    "tslint-react": "^3.2.0",
     "typescript": "^2.5.2"
   },
   "main": "./node_modules/react-native-scripts-ts/build/bin/crna-entry.js",
