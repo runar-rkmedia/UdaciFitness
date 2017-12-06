@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { red, orange, blue, lightPurp, pink, white } from './colors'
 
-export function getDailyReminderValue () {
+export function getDailyReminderValue() {
   return {
     today: `👋 Don"t forget to log your data today!`
   }
@@ -21,106 +21,119 @@ const styles = StyleSheet.create({
   },
 })
 
-export function getMetricMetaInfo (metric?: any) {
-  const info = {
-    run: {
-      displayName: 'Run',
-      max: 50,
-      unit: 'miles',
-      step: 1,
-      type: 'steppers',
-      getIcon() {
-        return (
-          <View style={[styles.iconContainer, {backgroundColor: red}]}>
-            <MaterialIcons
-              name="directions-run"
-              color={white}
-              size={35}
-            />
-          </View>
-        )
-      }
-    },
-    bike: {
-      displayName: 'Bike',
-      max: 100,
-      unit: 'miles',
-      step: 1,
-      type: 'steppers',
-      getIcon() {
-        return (
-          <View style={[styles.iconContainer, {backgroundColor: orange}]}>
-            <MaterialCommunityIcons
-              name="bike"
-              color={white}
-              size={32}
-            />
-          </View>
-        )
-      }
-    },
-    swim: {
-      displayName: 'Swim',
-      max: 9900,
-      unit: 'meters',
-      step: 100,
-      type: 'steppers',
-      getIcon() {
-        return (
-          <View style={[styles.iconContainer, {backgroundColor: blue}]}>
-            <MaterialCommunityIcons
-              name="swim"
-              color={white}
-              size={35}
-            />
-          </View>
-        )
-      }
-    },
-    sleep: {
-      displayName: 'Sleep',
-      max: 24,
-      unit: 'hours',
-      step: 1,
-      type: 'slider',
-      getIcon() {
-        return (
-          <View style={[styles.iconContainer, {backgroundColor: lightPurp}]}>
-            <FontAwesome
-              name="bed"
-              color={white}
-              size={30}
-            />
-          </View>
-        )
-      }
-    },
-    eat: {
-      displayName: 'Eat',
-      max: 10,
-      unit: 'rating',
-      step: 1,
-      type: 'slider',
-      getIcon() {
-        return (
-          <View style={[styles.iconContainer, {backgroundColor: pink}]}>
-            <MaterialCommunityIcons
-              name="food"
-              color={white}
-              size={35}
-            />
-          </View>
-        )
-      }
-    },
-  }
-
-  return typeof metric === 'undefined'
-    ? info
-    : (info as any)[metric]
+interface MetricI {
+  displayName: string,
+  max: number,
+  unit: 'miles' | 'km' | 'meters' | 'hours' | 'rating'
+  step: number
+  type: 'steppers' | 'slider'
+  getIcon: () => {}
 }
 
-export function isBetween (num: number, x: number, y: number) {
+type MetricT = 'run' | 'bike' | 'sleep' | 'swim' | 'eat'
+
+export interface MetricInfoI {
+  run: MetricI
+  bike: MetricI
+  sleep: MetricI
+  swim: MetricI
+  eat: MetricI
+}
+
+export const metricMetaInfo: MetricInfoI = {
+  run: {
+    displayName: 'Run',
+    max: 50,
+    unit: 'miles',
+    step: 1,
+    type: 'steppers',
+    getIcon() {
+      return (
+        <View style={[styles.iconContainer, { backgroundColor: red }]}>
+          <MaterialIcons
+            name="directions-run"
+            color={white}
+            size={35}
+          />
+        </View>
+      )
+    }
+  },
+  bike: {
+    displayName: 'Bike',
+    max: 100,
+    unit: 'miles',
+    step: 1,
+    type: 'steppers',
+    getIcon() {
+      return (
+        <View style={[styles.iconContainer, { backgroundColor: orange }]}>
+          <MaterialCommunityIcons
+            name="bike"
+            color={white}
+            size={32}
+          />
+        </View>
+      )
+    }
+  },
+  swim: {
+    displayName: 'Swim',
+    max: 9900,
+    unit: 'meters',
+    step: 100,
+    type: 'steppers',
+    getIcon() {
+      return (
+        <View style={[styles.iconContainer, { backgroundColor: blue }]}>
+          <MaterialCommunityIcons
+            name="swim"
+            color={white}
+            size={35}
+          />
+        </View>
+      )
+    }
+  },
+  sleep: {
+    displayName: 'Sleep',
+    max: 24,
+    unit: 'hours',
+    step: 1,
+    type: 'slider',
+    getIcon() {
+      return (
+        <View style={[styles.iconContainer, { backgroundColor: lightPurp }]}>
+          <FontAwesome
+            name="bed"
+            color={white}
+            size={30}
+          />
+        </View>
+      )
+    }
+  },
+  eat: {
+    displayName: 'Eat',
+    max: 10,
+    unit: 'rating',
+    step: 1,
+    type: 'slider',
+    getIcon() {
+      return (
+        <View style={[styles.iconContainer, { backgroundColor: pink }]}>
+          <MaterialCommunityIcons
+            name="food"
+            color={white}
+            size={35}
+          />
+        </View>
+      )
+    }
+  }
+}
+
+export function isBetween(num: number, x: number, y: number) {
   if (num >= x && num <= y) {
     return true
   }
@@ -128,7 +141,7 @@ export function isBetween (num: number, x: number, y: number) {
   return false
 }
 
-export function calculateDirection (heading: number) {
+export function calculateDirection(heading: number) {
   let direction = ''
 
   if (isBetween(heading, 0, 22.5)) {
@@ -156,7 +169,7 @@ export function calculateDirection (heading: number) {
   return direction
 }
 
-export function timeToString (time: number = Date.now()) {
+export function timeToString(time: number = Date.now()) {
   const date = new Date(time)
   const todayUTC = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
   return todayUTC.toISOString().split('T')[0]
