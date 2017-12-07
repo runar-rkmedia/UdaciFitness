@@ -1,6 +1,13 @@
 import * as React from 'react'
-import { View, TouchableOpacity, Text } from 'react-native'
-import { MetricT, metricMetaInfo, MetricType } from '../utils/helpers'
+import { View, Text } from 'react-native'
+import {
+  MetricT,
+  metricMetaInfo,
+  MetricType,
+  removeEntry,
+  submitEntry,
+  timeToString
+} from '../utils'
 import { UdaciSlider, UdaciStepper, DateHeader, TextBtn } from '../Components'
 import { Ionicons } from '@expo/vector-icons'
 
@@ -52,9 +59,8 @@ export class AddEntry extends React.Component<Props, State> {
       }
     })
   }
-  reset = () => this.submit()
-  submit = () => {
-    // // const key = timeToString()
+  reset = () => {
+    const key = timeToString()
     // const entry = this.state
 
     // Update Redux
@@ -63,7 +69,21 @@ export class AddEntry extends React.Component<Props, State> {
 
     // Navigate to home
 
-    // Save to 'DB'
+    removeEntry(key)
+
+    // Clear local notifications
+  }
+  submit = () => {
+    const key = timeToString()
+    const entry = this.state
+
+    // Update Redux
+
+    this.setState(initialState)
+
+    // Navigate to home
+
+    submitEntry({ key, entry })
 
     // Clear local notifications
   }
@@ -71,7 +91,7 @@ export class AddEntry extends React.Component<Props, State> {
     if (this.props.alreadyLogged) {
       return (
         <View>
-          <Ionicons name="ios-happy-outline" size={100}/>
+          <Ionicons name="ios-happy-outline" size={100} />
           <Text>You already logged your information for today</Text>
           <TextBtn onPress={this.reset}>Reset</TextBtn>
         </View>
