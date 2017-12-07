@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
-import { red, orange, blue, lightPurp, pink, white } from './colors'
+import { red, orange, blue, lightPurp, pink, white } from './'
 
 export function getDailyReminderValue() {
   return {
@@ -21,16 +21,20 @@ const styles = StyleSheet.create({
   },
 })
 
-interface MetricI {
+export enum MetricType {
+  stepper, slider
+}
+
+export interface MetricI {
   displayName: string,
   max: number,
   unit: 'miles' | 'km' | 'meters' | 'hours' | 'rating'
   step: number
-  type: 'steppers' | 'slider'
+  type: MetricType
   getIcon: () => {}
 }
 
-type MetricT = 'run' | 'bike' | 'sleep' | 'swim' | 'eat'
+export type MetricT = 'run' | 'bike' | 'sleep' | 'swim' | 'eat'
 
 export interface MetricInfoI {
   run: MetricI
@@ -46,7 +50,7 @@ export const metricMetaInfo: MetricInfoI = {
     max: 50,
     unit: 'miles',
     step: 1,
-    type: 'steppers',
+    type: MetricType.stepper,
     getIcon() {
       return (
         <View style={[styles.iconContainer, { backgroundColor: red }]}>
@@ -64,7 +68,7 @@ export const metricMetaInfo: MetricInfoI = {
     max: 100,
     unit: 'miles',
     step: 1,
-    type: 'steppers',
+    type: MetricType.stepper,
     getIcon() {
       return (
         <View style={[styles.iconContainer, { backgroundColor: orange }]}>
@@ -82,7 +86,7 @@ export const metricMetaInfo: MetricInfoI = {
     max: 9900,
     unit: 'meters',
     step: 100,
-    type: 'steppers',
+    type: MetricType.stepper,
     getIcon() {
       return (
         <View style={[styles.iconContainer, { backgroundColor: blue }]}>
@@ -100,7 +104,7 @@ export const metricMetaInfo: MetricInfoI = {
     max: 24,
     unit: 'hours',
     step: 1,
-    type: 'slider',
+    type: MetricType.slider,
     getIcon() {
       return (
         <View style={[styles.iconContainer, { backgroundColor: lightPurp }]}>
@@ -118,7 +122,7 @@ export const metricMetaInfo: MetricInfoI = {
     max: 10,
     unit: 'rating',
     step: 1,
-    type: 'slider',
+    type: MetricType.slider,
     getIcon() {
       return (
         <View style={[styles.iconContainer, { backgroundColor: pink }]}>

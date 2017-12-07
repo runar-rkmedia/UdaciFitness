@@ -2,6 +2,8 @@
 // tslint:disable:interface-over-type-literal
 // tslint:disable:max-classes-per-file
 // tslint:disable:member-access
+// tslint:disable:max-line-length
+// tslint:disable:member-ordering
 
 declare module 'expo' {
   import { ColorPropType } from 'react-native'

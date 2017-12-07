@@ -1,5 +1,5 @@
 import { AsyncStorage } from 'react-native'
-import { metricMetaInfo, timeToString, MetricInfoI } from './helpers'
+import { metricMetaInfo, timeToString } from './'
 
 export const CALENDAR_STORAGE_KEY = 'UdaciFitness:calendar'
 
@@ -33,7 +33,7 @@ function setDummyData() {
 }
 
 function setMissingDates(dates: any) {
-  const length = Object.keys(dates).length
+  // const length = Object.keys(dates).length
   const timestamp = Date.now()
 
   for (let i = -183; i < 0; i++) {
