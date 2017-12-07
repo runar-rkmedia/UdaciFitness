@@ -7,7 +7,7 @@ export function TextBtn(
     children: any
   }) {
   return (
-    <TouchableOpacity {...onPress}>
+    <TouchableOpacity {...{onPress}}>
       <Text>{children}</Text>
     </TouchableOpacity>
   )

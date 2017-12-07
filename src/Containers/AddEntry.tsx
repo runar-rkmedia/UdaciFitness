@@ -10,14 +10,9 @@ import {
 } from '../utils'
 import { UdaciSlider, UdaciStepper, DateHeader, TextBtn } from '../Components'
 import { Ionicons } from '@expo/vector-icons'
-
-interface State {
-  run: number
-  sleep: number
-  bike: number
-  swim: number
-  eat: number
-}
+import { connect, Dispatch } from 'react-redux'
+import { addEntry } from '../actions'
+import { StoreState, Entry } from '../store'
 
 const initialState = {
   run: 0,
@@ -28,10 +23,8 @@ const initialState = {
 }
 
 interface Props {
-  alreadyLogged: boolean
 }
-
-export class AddEntry extends React.Component<Props, State> {
+class AddEntryC extends React.Component<Props & IConnectProps, Entry> {
   state = initialState
   stepper = (metric: MetricT, inc: 1 | -1 = 1) => {
     const { max, step } = metricMetaInfo[metric]
@@ -77,7 +70,9 @@ export class AddEntry extends React.Component<Props, State> {
     const key = timeToString()
     const entry = this.state
 
-    // Update Redux
+    this.props.addEntry({
+      [key]: entry
+    })
 
     this.setState(initialState)
 
@@ -121,7 +116,6 @@ export class AddEntry extends React.Component<Props, State> {
                   onDecrement={() => this.decrement((key as MetricT))}
                 />
               }
-
             </View>
           )
         })}
@@ -130,3 +124,21 @@ export class AddEntry extends React.Component<Props, State> {
     )
   }
 }
+
+const connectCreator = connect(
+  (state: StoreState) => {
+    const s = state[timeToString()]
+    return {
+      alreadyLogged: s && typeof s.today === undefined,
+    }
+  },
+  (dispatch: Dispatch<{}>) => {
+    return {
+      addEntry: (entry: { [s: string]: Entry }) => {
+        return dispatch(addEntry(entry))
+      },
+    }
+  },
+)
+type IConnectProps = typeof connectCreator.allProps
+export const AddEntry = connectCreator(AddEntryC)

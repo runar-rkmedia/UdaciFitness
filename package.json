@@ -6,10 +6,12 @@
     "@types/expo": "^23.0.0",
     "@types/react-native": "^0.50.7",
     "@types/react-test-renderer": "^16.0.0",
+    "@types/remote-redux-devtools": "^0.5.2",
     "jest-expo-ts": "^22.0.1",
     "react-native-scripts-ts": "1.7.0",
     "react-native-typescript-transformer": "^1.1.4",
     "react-test-renderer": "^16.2.0",
+    "remote-redux-devtools": "^0.5.12",
     "tslib": "^1.7.1",
     "tslint": "^5.8.0",
     "tslint-react": "^3.2.0",
@@ -27,8 +29,11 @@
     "preset": "jest-expo-ts"
   },
   "dependencies": {
+    "@types/react-redux": "^5.0.14",
     "expo": "^23.0.6",
     "react": "16.0.0",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-23.0.0.tar.gz"
+    "react-native": "https://github.com/expo/react-native/archive/sdk-23.0.0.tar.gz",
+    "react-redux": "^5.0.6",
+    "redux": "^3.7.2"
   }
 }

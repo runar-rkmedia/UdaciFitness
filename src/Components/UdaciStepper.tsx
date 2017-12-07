@@ -11,7 +11,7 @@ interface Props extends MetricI {
 
 const iconProps = {
   color: black,
-  size: 35
+  size: 5
 }
 
 export function UdaciStepper(
