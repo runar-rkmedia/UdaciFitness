@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Slider } from 'react-native'
 import { MetricI } from '../utils/helpers'
 
 interface Props extends MetricI {
@@ -7,10 +7,20 @@ interface Props extends MetricI {
   onChange: (v: number) => any
 }
 
-export function UdaciSlider (props: Props) {
+export function UdaciSlider({ max, value, unit, onChange, step }: Props) {
   return (
-      <View>
-      <Text>Udacislider</Text>
-      </View>
+    <View>
+      <Slider
+        {...{
+          value,
+          step,
+          minimumValue: 0,
+          maximumValue: max,
+          onValueChange: onChange
+        }}
+      />
+      <Text>{value}</Text>
+      <Text>{unit}</Text>
+    </View>
   )
 }

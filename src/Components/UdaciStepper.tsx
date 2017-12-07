@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { View, Text } from 'react-native'
-import { MetricI } from '../utils'
+import { View, Text, TouchableOpacity } from 'react-native'
+import { FontAwesome } from '@expo/vector-icons'
+import { MetricI, black } from '../utils'
 
 interface Props extends MetricI {
   value: number
@@ -8,10 +9,27 @@ interface Props extends MetricI {
   onDecrement: () => any
 }
 
-export function UdaciStepper (props: Props) {
+const iconProps = {
+  color: black,
+  size: 35
+}
+
+export function UdaciStepper(
+  { max, value, unit, onIncrement, onDecrement, step }: Props) {
   return (
+    <View>
       <View>
-      <Text>UdaciStepper</Text>
+        <TouchableOpacity onPress={onDecrement}>
+          <FontAwesome name="minus" {...iconProps} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={onIncrement}>
+          <FontAwesome name="plus" {...iconProps} />
+        </TouchableOpacity>
       </View>
+      <View>
+        <Text>{value}</Text>
+        <Text>{unit}</Text>
+      </View>
+    </View>
   )
 }

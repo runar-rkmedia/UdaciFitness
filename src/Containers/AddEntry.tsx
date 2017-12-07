@@ -1,7 +1,8 @@
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, TouchableOpacity, Text } from 'react-native'
 import { MetricT, metricMetaInfo, MetricType } from '../utils/helpers'
-import { UdaciSlider, UdaciStepper, DateHeader } from './'
+import { UdaciSlider, UdaciStepper, DateHeader, TextBtn } from '../Components'
+import { Ionicons } from '@expo/vector-icons'
 
 interface State {
   run: number
@@ -11,14 +12,20 @@ interface State {
   eat: number
 }
 
-export class AddEntry extends React.Component<{}, State> {
-  state = {
-    run: 0,
-    sleep: 0,
-    bike: 0,
-    swim: 0,
-    eat: 0,
-  }
+const initialState = {
+  run: 0,
+  sleep: 0,
+  bike: 0,
+  swim: 0,
+  eat: 0,
+}
+
+interface Props {
+  alreadyLogged: boolean
+}
+
+export class AddEntry extends React.Component<Props, State> {
+  state = initialState
   stepper = (metric: MetricT, inc: 1 | -1 = 1) => {
     const { max, step } = metricMetaInfo[metric]
     this.setState(state => {
@@ -45,13 +52,37 @@ export class AddEntry extends React.Component<{}, State> {
       }
     })
   }
+  reset = () => this.submit()
+  submit = () => {
+    // // const key = timeToString()
+    // const entry = this.state
+
+    // Update Redux
+
+    this.setState(initialState)
+
+    // Navigate to home
+
+    // Save to 'DB'
+
+    // Clear local notifications
+  }
   render() {
+    if (this.props.alreadyLogged) {
+      return (
+        <View>
+          <Ionicons name="ios-happy-outline" size={100}/>
+          <Text>You already logged your information for today</Text>
+          <TextBtn onPress={this.reset}>Reset</TextBtn>
+        </View>
+      )
+    }
     return (
       <View>
         <DateHeader date={(new Date())} />
         {Object.keys(metricMetaInfo).map((key) => {
           const metric = metricMetaInfo[(key as MetricT)]
-          const { getIcon, type} = metric
+          const { getIcon, type } = metric
           const value = this.state[key]
 
           return (
@@ -60,12 +91,12 @@ export class AddEntry extends React.Component<{}, State> {
               {type === MetricType.slider ?
                 <UdaciSlider
                   {...metric}
-                  {...{value}}
+                  {...{ value }}
                   onChange={(v) => this.slide((key as MetricT), v)}
                 /> :
                 <UdaciStepper
                   {...metric}
-                  {...{value}}
+                  {...{ value }}
                   onIncrement={() => this.increment((key as MetricT))}
                   onDecrement={() => this.decrement((key as MetricT))}
                 />
@@ -74,6 +105,7 @@ export class AddEntry extends React.Component<{}, State> {
             </View>
           )
         })}
+        <TextBtn onPress={this.submit}>SUBMIT</TextBtn>
       </View>
     )
   }
