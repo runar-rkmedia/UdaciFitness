@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import { MetricT, metricMetaInfo, MetricType } from '../utils/helpers'
-import { UdaciSlider, UdaciStepper } from './'
+import { UdaciSlider, UdaciStepper, DateHeader } from './'
 
 interface State {
   run: number
@@ -48,6 +48,7 @@ export class AddEntry extends React.Component<{}, State> {
   render() {
     return (
       <View>
+        <DateHeader date={(new Date())} />
         {Object.keys(metricMetaInfo).map((key) => {
           const metric = metricMetaInfo[(key as MetricT)]
           const { getIcon, type} = metric
