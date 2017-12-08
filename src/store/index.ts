@@ -1,6 +1,7 @@
 import { createStore } from 'redux'
 import { reducer } from '../reducers/'
 import { composeWithDevTools } from 'remote-redux-devtools'
+import { DailyReminder } from '../utils'
 
 export const store = createStore(reducer, composeWithDevTools())
 
@@ -14,6 +15,6 @@ export interface Entry {
 
 export interface StoreState {
   entries: {
-    [s: string]: Entry
+    [s: string]: Entry | DailyReminder
   }
 }

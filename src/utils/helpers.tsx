@@ -3,7 +3,11 @@ import { View, StyleSheet } from 'react-native'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { red, orange, blue, lightPurp, pink, white } from './'
 
-export function getDailyReminderValue() {
+export interface DailyReminder {
+  today: string
+}
+
+export function getDailyReminderValue(): DailyReminder {
   return {
     today: `👋 Don"t forget to log your data today!`
   }

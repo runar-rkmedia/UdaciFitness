@@ -6,7 +6,9 @@ import {
   MetricType,
   removeEntry,
   submitEntry,
-  timeToString
+  timeToString,
+  getDailyReminderValue,
+  DailyReminder
 } from '../utils'
 import { UdaciSlider, UdaciStepper, DateHeader, TextBtn } from '../Components'
 import { Ionicons } from '@expo/vector-icons'
@@ -54,9 +56,10 @@ class AddEntryC extends React.Component<Props & IConnectProps, Entry> {
   }
   reset = () => {
     const key = timeToString()
-    // const entry = this.state
 
-    // Update Redux
+    this.props.addEntry({
+      [key]: getDailyReminderValue()
+    })
 
     this.setState(initialState)
 
@@ -126,15 +129,15 @@ class AddEntryC extends React.Component<Props & IConnectProps, Entry> {
 }
 
 const connectCreator = connect(
-  (state: StoreState) => {
-    const s = state[timeToString()]
+  ({ entries }: StoreState) => {
+    const s = entries[timeToString()]
     return {
-      alreadyLogged: s && typeof s.today === undefined,
+      alreadyLogged: s && !('today' in s)
     }
   },
   (dispatch: Dispatch<{}>) => {
     return {
-      addEntry: (entry: { [s: string]: Entry }) => {
+      addEntry: (entry: { [s: string]: Entry | DailyReminder }) => {
         return dispatch(addEntry(entry))
       },
     }
