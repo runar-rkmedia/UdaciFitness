@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import {
   MetricT,
   metricMetaInfo,
@@ -8,7 +8,10 @@ import {
   submitEntry,
   timeToString,
   getDailyReminderValue,
-  DailyReminder
+  DailyReminder,
+  white,
+  OS,
+  baseStyle
 } from '../utils'
 import { UdaciSlider, UdaciStepper, DateHeader, TextBtn } from '../Components'
 import { Ionicons } from '@expo/vector-icons'
@@ -23,7 +26,6 @@ const initialState = {
   swim: 0,
   eat: 0,
 }
-
 interface Props {
 }
 class AddEntryC extends React.Component<Props & IConnectProps, Entry> {
@@ -88,15 +90,23 @@ class AddEntryC extends React.Component<Props & IConnectProps, Entry> {
   render() {
     if (this.props.alreadyLogged) {
       return (
-        <View>
-          <Ionicons name="ios-happy-outline" size={100} />
+        <View style={baseStyle.center}>
+          <Ionicons
+            name={OS({ ios: 'ios-happy-outline', android: 'md-happy' })}
+            size={100}
+          />
           <Text>You already logged your information for today</Text>
-          <TextBtn onPress={this.reset}>Reset</TextBtn>
+          <TextBtn
+            onPress={this.reset}
+            type="reset"
+          >
+            Reset
+          </TextBtn>
         </View>
       )
     }
     return (
-      <View>
+      <View style={style.container}>
         <DateHeader date={(new Date())} />
         {Object.keys(metricMetaInfo).map((key) => {
           const metric = metricMetaInfo[(key as MetricT)]
@@ -104,7 +114,7 @@ class AddEntryC extends React.Component<Props & IConnectProps, Entry> {
           const value = this.state[key]
 
           return (
-            <View key={key}>
+            <View key={key} style={baseStyle.row}>
               {getIcon()}
               {type === MetricType.slider ?
                 <UdaciSlider
@@ -145,3 +155,11 @@ const connectCreator = connect(
 )
 type IConnectProps = typeof connectCreator.allProps
 export const AddEntry = connectCreator(AddEntryC)
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: white
+  }
+})

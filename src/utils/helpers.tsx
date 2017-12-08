@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Platform, ViewStyle } from 'react-native'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { red, orange, blue, lightPurp, pink, white } from './'
 
@@ -10,6 +10,28 @@ export interface DailyReminder {
 export function getDailyReminderValue(): DailyReminder {
   return {
     today: `👋 Don"t forget to log your data today!`
+  }
+}
+
+export function OS({ ios, android }: { ios: any, android: any }) {
+  switch (Platform.OS) {
+    case 'ios':
+      return ios
+    case 'android':
+      return android
+    default:
+      return android || ios
+  }
+}
+
+export function jssOS({ ios, android }: { ios: ViewStyle, android: ViewStyle }) {
+  switch (Platform.OS) {
+    case 'ios':
+      return ios
+    case 'android':
+      return android
+    default:
+      return android || ios
   }
 }
 
