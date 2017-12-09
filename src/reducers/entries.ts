@@ -6,7 +6,6 @@ interface EntriesStoreState {
 }
 
 export function entries(state: EntriesStoreState = {}, action: EntriesAT): EntriesStoreState {
-  console.log(state, action)
   switch (action.type) {
     case EntriesA.recieve:
       return {

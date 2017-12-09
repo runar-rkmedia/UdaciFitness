@@ -1,40 +1,65 @@
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { connect, Dispatch } from 'react-redux'
 import { recieveEntries, addEntry, EntriesA } from '../actions'
 import { StoreState, Entry, } from '../store'
+import { DateHeader, MetricCard } from '../Components'
 import {
   timeToString,
   getDailyReminderValue,
   fetchCalendarResults,
   DailyReminder,
-
+  white,
+  OS
 } from '../utils'
 import UdacifitnessCalendar from 'udacifitness-calendar'
+import { AppLoading } from 'expo'
 
-class HistoryC extends React.Component<IConnectProps> {
+interface State {
+  ready: boolean
+}
+
+class HistoryC extends React.Component<IConnectProps, State> {
+  constructor(props: IConnectProps) {
+    super(props)
+    this.state = ({
+      ready: false
+    })
+  }
   componentDidMount() {
     this.props.getEntries()
+    .then(() => this.setState({ready: true}))
   }
   renderItem = (entry: Entry | DailyReminder, formattedDate: string, key: string) => {
     const today = (entry as DailyReminder).today
     return (
-      <View>
+      <View style={style.item}>
         {today ? (
-          <Text>{JSON.stringify(today)}</Text>
-        ) : <Text>{JSON.stringify(entry)}</Text>}
+          <View>
+            <DateHeader dateString={formattedDate} />
+            <Text style={style.noDataText}>{today}</Text>
+          </View>
+        ) :
+          <TouchableOpacity onPress={() => {return null}}>
+            <MetricCard date={formattedDate} metrics={entry} />
+          </TouchableOpacity>}
       </View>
     )
   }
   renderEmptyDate = (formattedDate: string, key: string) => {
     return (
-      <View>
-        <Text>No data for this day</Text>
+      <View style={style.item}>
+        <DateHeader dateString={formattedDate} />
+        <Text style={style.noDataText}>You did not log any data on this day.</Text>
       </View>
     )
   }
   render() {
     const { entries } = this.props
+    const ready = this.state.ready
+    if (ready === false) {
+      return <AppLoading />
+    }
     return (
       <UdacifitnessCalendar
         {...{
@@ -77,3 +102,27 @@ const connectCreator = connect(
 )
 type IConnectProps = typeof connectCreator.allProps
 export const History = connectCreator(HistoryC)
+
+const style = StyleSheet.create({
+  item: {
+    backgroundColor: white,
+    borderRadius: OS({ ios: 16, android: 2 }),
+    padding: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 17,
+    justifyContent: 'center',
+    shadowRadius: 3,
+    shadowOpacity: 0.8,
+    shadowColor: 'rgba(0,0,0,0.24)',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    }
+  },
+  noDataText: {
+    fontSize: 20,
+    paddingTop: 20,
+    paddingBottom: 20
+  }
+})
