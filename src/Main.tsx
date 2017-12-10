@@ -2,9 +2,9 @@ import * as React from 'react'
 import { Provider } from 'react-redux'
 import { store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
-import { TabNavigator, } from 'react-navigation'
+import { TabNavigator, StackNavigator } from 'react-navigation'
 import { AddEntry } from './Containers/'
-import { History } from './Components/'
+import { History, EntryDetail } from './Components/'
 import { OS, purple, white } from './utils/'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { Constants } from 'expo'
@@ -21,21 +21,21 @@ function UdaciStatusBar({ backgroundColor, ...props }: {
 
 const Tabs = TabNavigator(
   {
-    AddEntry: {
-      screen: AddEntry,
-      navigationOptions: {
-        tabBarLabel: 'Add Entry',
-        tabBarIcon: ({ tintColor }: any) => (
-          <FontAwesome name={OS({ ios: 'plus-square', android: 'plus-square' })} size={30} color={tintColor} />
-        )
-      },
-    },
     History: {
       screen: History,
       navigationOptions: {
         tabBarLabel: 'History',
         tabBarIcon: ({ tintColor }: any) => (
           <Ionicons name={OS({ ios: 'ios-bookmarks', android: 'md-bookmarks' })} size={30} color={tintColor} />
+        )
+      },
+    },
+    AddEntry: {
+      screen: AddEntry,
+      navigationOptions: {
+        tabBarLabel: 'Add Entry',
+        tabBarIcon: ({ tintColor }: any) => (
+          <FontAwesome name={OS({ ios: 'plus-square', android: 'plus-square' })} size={30} color={tintColor} />
         )
       },
     },
@@ -61,13 +61,29 @@ const Tabs = TabNavigator(
   }
 )
 
+const MainNavigator = StackNavigator({
+  Home: {
+    screen: Tabs,
+  },
+  EntryDetail: {
+    screen: EntryDetail,
+    navigationOptions: {
+      headerTingColor: white,
+      headerStyle: {
+        backgroundColor: purple
+      }
+    }
+  },
+
+})
+
 export default class Main extends React.Component<{}> {
   render() {
     return (
       <Provider store={store}>
         <View style={{ flex: 1 }}>
           <UdaciStatusBar backgroundColor={purple} barStyle="light-content" />
-          <Tabs />
+          <MainNavigator />
         </View>
       </Provider>
     )

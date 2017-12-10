@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { NavigationScreenConfigProps } from 'react-navigation'
 import { connect, Dispatch } from 'react-redux'
 import { recieveEntries, addEntry, EntriesA } from '../actions'
 import { StoreState, Entry, } from '../store'
@@ -19,8 +20,10 @@ interface State {
   ready: boolean
 }
 
-class HistoryC extends React.Component<IConnectProps, State> {
-  constructor(props: IConnectProps) {
+type CProps = NavigationScreenConfigProps & IConnectProps
+
+class HistoryC extends React.Component<CProps, State> {
+  constructor(props: CProps) {
     super(props)
     this.state = ({
       ready: false
@@ -28,7 +31,7 @@ class HistoryC extends React.Component<IConnectProps, State> {
   }
   componentDidMount() {
     this.props.getEntries()
-    .then(() => this.setState({ready: true}))
+      .then(() => this.setState({ ready: true }))
   }
   renderItem = (entry: Entry | DailyReminder, formattedDate: string, key: string) => {
     const today = (entry as DailyReminder).today
@@ -40,7 +43,16 @@ class HistoryC extends React.Component<IConnectProps, State> {
             <Text style={style.noDataText}>{today}</Text>
           </View>
         ) :
-          <TouchableOpacity onPress={() => {return null}}>
+          <TouchableOpacity
+            onPress={() => {
+              this.props.navigation.navigate(
+                'EntryDetail',
+                {
+                  entryID: key
+                }
+              )
+            }}
+          >
             <MetricCard date={formattedDate} metrics={entry} />
           </TouchableOpacity>}
       </View>
