@@ -4,7 +4,7 @@ import { store } from './store'
 import { View, StatusBar, StatusBarProperties } from 'react-native'
 import { TabNavigator, StackNavigator } from 'react-navigation'
 import { AddEntry } from './Containers/'
-import { History, EntryDetail } from './Components/'
+import { History, EntryDetail, Live } from './Components/'
 import { OS, purple, white } from './utils/'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { Constants } from 'expo'
@@ -36,6 +36,15 @@ const Tabs = TabNavigator(
         tabBarLabel: 'Add Entry',
         tabBarIcon: ({ tintColor }: any) => (
           <FontAwesome name={OS({ ios: 'plus-square', android: 'plus-square' })} size={30} color={tintColor} />
+        )
+      },
+    },
+    Live: {
+      screen: Live,
+      navigationOptions: {
+        tabBarLabel: 'Live',
+        tabBarIcon: ({ tintColor }: any) => (
+          <Ionicons name={OS({ ios: 'ios-speedometer', android: 'md-speedometer' })} size={30} color={tintColor} />
         )
       },
     },
