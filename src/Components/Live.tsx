@@ -45,7 +45,10 @@ export class Live extends React.Component<Props, State> {
         return (
           <View style={baseStyle.center}>
             <Foundation name="alert" size={50} />
-            <Text>You have denied this app access to location-services. You can fix this in the settings on your device.</Text>
+            <Text>
+              You have denied this app access to location-services.
+              You can fix this in the settings on your device.
+            </Text>
           </View>
         )
       case 'undetermined':
@@ -63,9 +66,31 @@ export class Live extends React.Component<Props, State> {
         )
       default:
         return (
-          <View>
-            <Text>Live</Text>
-            <Text>{JSON.stringify(this.state)}</Text>
+          <View style={styles.container}>
+            <View style={styles.directionContainer}>
+              <Text style={styles.header}>
+                You're heading
+              </Text>
+              <Text style={styles.direction}>North</Text>
+            </View>
+            <View style={styles.metricContainer}>
+              <View style={styles.metric}>
+                <Text style={[styles.header, { color: white }]}>
+                  Altitude:
+                </Text>
+                <Text style={[styles.subHeader, { color: white }]}>
+                  {200} Feet
+                </Text>
+              </View>
+              <View style={styles.metric}>
+                <Text style={[styles.header, { color: white }]}>
+                  Speed:
+                </Text>
+                <Text style={[styles.subHeader, { color: white }]}>
+                  {300} MPH
+                </Text>
+              </View>
+            </View>
           </View>
         )
     }
@@ -84,7 +109,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     margin: 20,
   },
-  buttonText :{
+  buttonText: {
     color: white,
     fontSize: 20,
   },
