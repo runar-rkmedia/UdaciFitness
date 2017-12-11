@@ -13,4 +13,8 @@ export const baseStyle = StyleSheet.create({
     marginRight: 30,
     marginLeft: 30,
   },
+  container: {
+    flex: 1,
+    justifyContent: 'space-between'
+  },
 })
