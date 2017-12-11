@@ -9,15 +9,14 @@ import {
 } from 'react-native'
 import { Foundation } from '@expo/vector-icons'
 import { purple, white, baseStyle } from '../utils'
+import { Location, Permissions } from 'expo'
+import { calculateDirection } from '../utils'
 
 interface Props {
 }
 
 interface State {
-  coords: {
-    x: number,
-    y: number
-  } | null
+  locationData: Location.LocationData | null
   status: PermissionStatus | null | 'undetermined'
   direction: string
 }
@@ -26,16 +25,60 @@ export class Live extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
     this.state = {
-      coords: null,
+      locationData: null,
       status: 'granted',
       direction: ''
     }
   }
-  askPermission() {
+  componentDidMount() {
+    Permissions.getAsync(Permissions.LOCATION)
+      .then(({ status }: Permissions.PermissionResponse) => {
+        if (status === 'granted') {
+          return this.setLocation()
+        }
+        this.setState(() => ({ status }))
+      })
+      .catch(({ error }) => {
+        console.warn('Error getting Location permission: ', error)
+        this.setState(() => ({ status: 'undetermined' }))
+      })
+  }
 
+  askPermission() {
+    Permissions.askAsync(Permissions.LOCATION)
+      .then(({ status }: Permissions.PermissionResponse) => {
+        switch (status) {
+          case 'granted':
+            return this.setLocation()
+          default:
+            return this.setState(() => ({ status }))
+        }
+      })
+      .catch((error) => {
+        console.warn('Error asking Location permission: ', error)
+      })
+  }
+  setLocation = () => {
+    Location.watchPositionAsync(
+      {
+        enableHighAccuracy: true,
+        timeInterval: 1,
+        distanceInterval: 1,
+      },
+      (locationData: Location.LocationData) => {
+        const newDirection = calculateDirection(locationData.coords.heading)
+        // const { direction } = this.state
+
+        this.setState((): State => ({
+          locationData,
+          status: 'granted',
+          direction: newDirection
+        }))
+      }
+    )
   }
   render() {
-    const { status, coords, direction } = this.state
+    const { status, locationData, direction } = this.state
     switch (status) {
       case null:
         return (
@@ -65,13 +108,20 @@ export class Live extends React.Component<Props, State> {
           </View>
         )
       default:
+        if (!locationData) {
+          return (
+            <View>
+              <Text>Waiting for locationdata...</Text>
+            </View>
+          )
+        }
         return (
           <View style={styles.container}>
             <View style={styles.directionContainer}>
               <Text style={styles.header}>
                 You're heading
               </Text>
-              <Text style={styles.direction}>North</Text>
+              <Text style={styles.direction}>{direction}</Text>
             </View>
             <View style={styles.metricContainer}>
               <View style={styles.metric}>
@@ -79,7 +129,7 @@ export class Live extends React.Component<Props, State> {
                   Altitude:
                 </Text>
                 <Text style={[styles.subHeader, { color: white }]}>
-                  {200} Feet
+                  {Math.round(locationData.coords.altitude)} meters
                 </Text>
               </View>
               <View style={styles.metric}>
@@ -87,7 +137,7 @@ export class Live extends React.Component<Props, State> {
                   Speed:
                 </Text>
                 <Text style={[styles.subHeader, { color: white }]}>
-                  {300} MPH
+                  {(locationData.coords.speed / 1000 * 60 * 60).toFixed(1)} KPH
                 </Text>
               </View>
             </View>
