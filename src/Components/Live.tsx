@@ -47,7 +47,7 @@ export class Live extends React.Component<Props, State> {
       })
   }
 
-  askPermission() {
+  askPermission = () => {
     Permissions.askAsync(Permissions.LOCATION)
       .then(({ status }: Permissions.PermissionResponse) => {
         switch (status) {
