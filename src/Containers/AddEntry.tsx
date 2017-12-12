@@ -11,7 +11,8 @@ import {
   DailyReminder,
   white,
   OS,
-  baseStyle
+  baseStyle,
+  notification
 } from '../utils'
 import { UdaciSlider, UdaciStepper, DateHeader, TextBtn } from '../Components'
 import { Ionicons } from '@expo/vector-icons'
@@ -85,7 +86,8 @@ class AddEntryC extends React.Component<Props & IConnectProps, Entry> {
 
     submitEntry({ key, entry })
 
-    // Clear local notifications
+    notification.clear()
+    .then(notification.set)
   }
   render() {
     if (this.props.alreadyLogged) {

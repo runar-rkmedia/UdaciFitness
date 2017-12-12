@@ -5,7 +5,7 @@ import { View, StatusBar, StatusBarProperties } from 'react-native'
 import { TabNavigator, StackNavigator } from 'react-navigation'
 import { AddEntry } from './Containers/'
 import { History, EntryDetail, Live } from './Components/'
-import { OS, purple, white } from './utils/'
+import { OS, purple, white, notification } from './utils/'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { Constants } from 'expo'
 
@@ -87,6 +87,9 @@ const MainNavigator = StackNavigator({
 })
 
 export default class Main extends React.Component<{}> {
+  componentDidMount() {
+    notification.set()
+  }
   render() {
     return (
       <Provider store={store}>

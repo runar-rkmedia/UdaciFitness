@@ -1,7 +1,10 @@
 import React from 'react'
-import { View, StyleSheet, Platform, ViewStyle } from 'react-native'
+import { View, StyleSheet, Platform, ViewStyle, AsyncStorage } from 'react-native'
 import { FontAwesome, MaterialIcons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { red, orange, blue, lightPurp, pink, white } from './'
+import { Notifications, Permissions } from 'expo'
+
+const NOTIFICATION_KEY = 'UdaciFitness:Notifications'
 
 export interface DailyReminder {
   today: string
@@ -203,4 +206,57 @@ export function timeToString(time: number = Date.now()) {
   const date = new Date(time)
   const todayUTC = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
   return todayUTC.toISOString().split('T')[0]
+}
+
+export const notification = {
+  clear: () => {
+    return AsyncStorage.removeItem(NOTIFICATION_KEY)
+    .then(Notifications.cancelAllScheduledNotificationsAsync)
+  },
+  create: () => {
+    return {
+      title: 'Log your stats',
+      body: `Don't forget to log your stats for today!`,
+      options: OS({
+        ios: {
+          sound: true,
+        },
+        android: {
+          sound: true,
+          priority: 'high',
+          sticky: false,
+          vibrate: true
+        }
+      })
+    }
+  },
+  set: () => {
+    AsyncStorage.getItem(NOTIFICATION_KEY)
+      .then(JSON.parse)
+      .then((data) => {
+        if (!data) {
+          Permissions.askAsync(Permissions.NOTIFICATIONS)
+            .then(({ status }: Permissions.PermissionResponse) => {
+              if (status === 'granted') {
+                Notifications.cancelAllScheduledNotificationsAsync()
+
+                let tomorrow = new Date()
+                tomorrow.setDate(tomorrow.getDate() + 1)
+                tomorrow.setHours(20)
+                tomorrow.setMinutes(0)
+
+                Notifications.scheduleLocalNotificationAsync(
+                  notification.create(),
+                  {
+                    time: tomorrow,
+                    repeat: 'day'
+                  }
+                )
+
+                AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true))
+              }
+            })
+        }
+      })
+  }
 }
